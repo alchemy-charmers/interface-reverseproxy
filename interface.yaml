@@ -1,0 +1,3 @@
+name: reverseproxy
+summary: A relation to allow charms to regsister with a reverse proxy provider
+

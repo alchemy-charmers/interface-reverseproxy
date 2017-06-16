@@ -1,0 +1,27 @@
+This interface is intended to allow abstraction between a charm offering a service and one offering a reverse proxy. It is a work in progress.
+
+All relation states should check for 'triggered' state to be sure it is a realation based event
+
+Expected flow:
+ - Provieds:
+   - when_not 'ready' call the configure function to provide information about the host
+ - Requires:
+   - when 'ready' and when_not 'configured' call the configure fucntion to provide reverse proxy request information
+ - Provides:
+   - when 'changed' apply self.config to the configuration.
+   - return a feedback about the config via the set_cfg_status function
+ - Requires:
+   - if cfg_status is a failure interface will log any provided status and fail
+   - if cfg_status is a success a success will be logegd via 'INFO' and no other state is applied
+
+
+Departed:
+ - Provides:
+  - when 'departed' remove self.config from the configuration
+
+Proxy Configuration Keys:
+ - urlbase: the base url to redirect to his charm
+ - subdomain: a subdomain to redirect to this charm
+ - external_port: the external port to listen on
+ - internal_host: the internal host to redirect to
+ - internal_port: the internal port to redirect to
