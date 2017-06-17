@@ -18,6 +18,7 @@ class ReverseProxyRequires(RelationBase):
         if self.hostname() and self.ports():
             hookenv.log('reverseproxy.ready','INFO')
             self.set_state('{relation_name}.ready')
+            # TODO: This doesn't appaer to trigger, suspect strings not Bool are sent in relation
             if self.cfg_good is False:
                 hookenv.log('reverseproxy cfg failed: {}'.format(self.status_msg),'ERROR')
                 #TODO raise error or set blocked in addation to logging?
