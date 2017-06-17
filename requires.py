@@ -29,6 +29,7 @@ class ReverseProxyRequires(RelationBase):
     @hook('{requires:reverseproxy}-relation-{departed}')
     def departed(self):
         self.set_state('{relation_name}.triggered')
+        self.remove_state('{relation_name}.configured')
         hookenv.log('reverseproxy.departed','INFO')
 
     def configure(self,config):
