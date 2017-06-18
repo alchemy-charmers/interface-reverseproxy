@@ -39,20 +39,21 @@ class ReverseProxyProvides(RelationBase):
     def set_cfg_status(self,cfg_good,msg=None):
         ''' After receiving a reverse proxy request, the provider should provide a status update
         cfg_good: Boolean value to represnt if the config was valid
-        msg: Optional msg to to explain the cfg 
+        msg: Optional msg to to explain the status 
         '''
         msg = msg or ''
         if cfg_good:
-            result = True
-            hookenv.log('reverseproxy cfg successful: {}'.format(msg),'INFO') 
+            status = 'passed: '+msg
+            hookenv.log(status,'INFO') 
         else:
-            result = False
-            hookenv.log('reverseproxy cfg failed: {}'.format(msg),'WARNING') 
-        relation_info = {
-            'cfg_good': result,
-            'status_msg': msg
-             }
-        self.set_remote(**relation_info)
+            status = 'failed: '+msg
+            hookenv.log(status,'WARNING') 
+        self.set_remote('cfg_status',status)
+        #relation_info = {
+        #    'cfg_good': result,
+        #    'status_msg': msg
+        #     }
+        #self.set_remote(**relation_info)
 
     @property
     def config(self):

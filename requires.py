@@ -3,9 +3,12 @@ from charmhelpers.core import hookenv
 
 import json
 
+class ProxyConfigError(Exception):
+    ''' Exception raise if reverse proxy provider can't apply request configuratin '''
+
 class ReverseProxyRequires(RelationBase):
     scope = scopes.UNIT
-    auto_accessors=['hostname','ports','cfg_good','status_msg']
+    auto_accessors=['hostname','ports','cfg_status']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -18,14 +21,13 @@ class ReverseProxyRequires(RelationBase):
         if self.hostname() and self.ports():
             hookenv.log('reverseproxy.ready','INFO')
             self.set_state('{relation_name}.ready')
-            # TODO: This doesn't appaer to trigger, suspect strings not Bool are sent in relation
-            if self.cfg_good is False:
-                hookenv.log('reverseproxy cfg failed: {}'.format(self.status_msg),'ERROR')
-                #TODO raise error or set blocked in addation to logging?
-            elif self.cfg_good is None:
-                hookenv.log('reverseproxy cfg not yet set','INFO')
-            elif self.cfg_good is True:
-                hookenv.log('reverseproxy cfg passed: {}'.format(self.status_msg),'INFO')
+            if self.cfg_status() is None:
+                hookenv.log('reverseproxy cfg status not yet set','INFO')
+            elif self.cfg_status().startswith('passed'):
+                hookenv.log(self.cfg_status(),'INFO')
+            elif self.cfg_status().startswith('failed'):
+                hookenv.log(self.cfg_status(),'ERROR')
+                raise ProxyConfigError(self.cfg_status())
                  
     @hook('{requires:reverseproxy}-relation-{departed}')
     def departed(self):
