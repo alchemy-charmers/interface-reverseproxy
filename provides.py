@@ -27,6 +27,7 @@ class ReverseProxyProvides(RelationBase):
         self.set_state('{relation_name}.departed')
         hookenv.log('reverseproxy.departed','INFO')
         # Clear data_changed
+        # TODO Test if this is necessary
         helpers.data_changed(hookenv.remote_unit(),'')
 
     def configure(self,ports,hostname=None):
