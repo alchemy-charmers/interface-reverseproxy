@@ -17,7 +17,7 @@ class ReverseProxyProvides(RelationBase):
     @hook('{provides:reverseproxy}-relation-{joined,changed}')
     def changed(self):
         self.set_state('{relation_name}.triggered')
-        if self.config is not None and helpers.data_changed('config',self.config):
+        if self.config is not None and helpers.data_changed(hookenv.remote_unit(),self.config):
             self.set_state('{relation_name}.changed')
 
     @hook('{provides:reverseproxy}-relation-{departed}')
