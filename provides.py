@@ -23,9 +23,11 @@ class ReverseProxyProvides(RelationBase):
     @hook('{provides:reverseproxy}-relation-{departed}')
     def departed(self):
         self.set_state('{relation_name}.triggered')
-        self.remove_state('{relation_name}.ready')
+        #self.remove_state('{relation_name}.ready') I don't think this is necessary or desired 
         self.set_state('{relation_name}.departed')
         hookenv.log('reverseproxy.departed','INFO')
+        # Clear data_changed
+        helpers.data_changed(hookenv.remote_unit(),'')
 
     def configure(self,ports,hostname=None):
         hostname = hostname or socket.getfqdn()
@@ -49,11 +51,6 @@ class ReverseProxyProvides(RelationBase):
             status = 'failed: '+msg
             hookenv.log(status,'WARNING') 
         self.set_remote('cfg_status',status)
-        #relation_info = {
-        #    'cfg_good': result,
-        #    'status_msg': msg
-        #     }
-        #self.set_remote(**relation_info)
 
     @property
     def config(self):
