@@ -1,6 +1,6 @@
 This interface is intended to allow abstraction between a charm offering a service and one offering a reverse proxy. It is a work in progress.
 
-All relation states should check for 'triggered' state to be sure it is a realation based event
+All relation states should check for 'triggered' state to be sure it is a realation based event.
 
 Expected flow:
  - Provieds:
@@ -14,14 +14,14 @@ Expected flow:
    - if cfg_status is a failure interface will log any provided status and fail
    - if cfg_status is a success a success will be logegd via 'INFO' and no other state is applied
 
-
 Departed:
  - Provides:
   - when 'departed' remove self.config from the configuration
 
 Proxy Configuration Keys:
- - urlbase: the base url to redirect to his charm
- - subdomain: a subdomain to redirect to this charm
+ - urlbase: (Optional if subdomain is provided) the base url to redirect to his charm, including leading /
+ - subdomain: (Optional if urlbase is provided) a subdomain to redirect to this charm
  - external_port: the external port to listen on
  - internal_host: the internal host to redirect to
  - internal_port: the internal port to redirect to
+ - group_id: (Optional) all relations with a matching group id will share the same server pool. urlbase, subdomain, and external_port should match on all members of the group
