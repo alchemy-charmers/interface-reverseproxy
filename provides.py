@@ -22,16 +22,19 @@ class ReverseProxyProvides(RelationBase):
 
     @hook('{provides:reverseproxy}-relation-{departed}')
     def departed(self):
-        self.set_state('{relation_name}.triggered')
-        self.remove_state('{relation_name}.ready')
-        self.set_state('{relation_name}.departed')
         hookenv.log('reverseproxy.departed','INFO')
-        # Clear data_changed
-        # TODO Test if this is necessary
-        helpers.data_changed(hookenv.remote_unit(),'')
+        self.set_state('{relation_name}.triggered')
+        self.set_state('{relation_name}.departed')
+        # Clear states and data on depart
+        self.remove_state('{relation_name}.ready')
+        self.set_remote(hookenv.remote_unit()+'.cfg_status',None)
+        helpers.data_changed(hookenv.remote_unit(),None)
 
-    def configure(self,ports,hostname=None):
+    def configure(self,ports=None,hostname=None):
+        hookenv.log('provides:reverseproxy.configure called for unit {}'.format(hookenv.remote_unit()),'DEBUG')
+        hookenv.log('provides:reverseproxy.configure current hook {}'.format(hookenv.hook_name()),'DEBUG')
         hostname = hostname or socket.getfqdn()
+        ports = ports or []
         relation_info = {
             'hostname': hostname,
             'ports': ports
@@ -51,7 +54,7 @@ class ReverseProxyProvides(RelationBase):
         else:
             status = 'failed: '+msg
             hookenv.log(status,'WARNING') 
-        self.set_remote('cfg_status',status)
+        self.set_remote(hookenv.remote_unit()+'.cfg_status',status)
 
     @property
     def config(self):

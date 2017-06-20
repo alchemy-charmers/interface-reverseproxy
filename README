@@ -19,6 +19,7 @@ Departed:
   - when 'departed' remove self.config from the configuration
 
 Proxy Configuration Keys:
+ - mode: (Optional) set 'tcp' or 'http' routing, defaults to 'http'
  - urlbase: (Optional if subdomain is provided) the base url to redirect to his charm, including leading /
  - subdomain: (Optional if urlbase is provided) a subdomain to redirect to this charm
  - external_port: the external port to listen on
