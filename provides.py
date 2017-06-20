@@ -23,7 +23,7 @@ class ReverseProxyProvides(RelationBase):
     @hook('{provides:reverseproxy}-relation-{departed}')
     def departed(self):
         self.set_state('{relation_name}.triggered')
-        #self.remove_state('{relation_name}.ready') I don't think this is necessary or desired 
+        self.remove_state('{relation_name}.ready')
         self.set_state('{relation_name}.departed')
         hookenv.log('reverseproxy.departed','INFO')
         # Clear data_changed

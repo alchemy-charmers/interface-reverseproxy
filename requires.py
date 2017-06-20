@@ -1,5 +1,6 @@
 from charms.reactive import RelationBase, scopes, hook
 from charmhelpers.core import hookenv
+from collections import defaultdict
 
 import json
 
@@ -38,5 +39,22 @@ class ReverseProxyRequires(RelationBase):
         hookenv.log('reverseproxy.departed','INFO')
 
     def configure(self,config):
+        # Basic config validation
+        config = defaultdict(lambda: None,config)    
+        if config['mode'] not in ('http','tcp'):
+            if not config['mode']:
+                config['mode'] = 'http'
+            else:
+                raise ProxyConfigError('"mode" setting must be http or tcp if provided')        
+        if config['mode'] == 'http':
+            if config['urlbase'] == config['subdomain'] == None:
+                raise ProxyConfigError('"urlbase" or "subdomain" must be set in http mode')        
+        if not config['external_port']:
+            raise ProxyConfigError('"external_port" is required')        
+        if not config['internal_host']:
+            raise ProxyConfigError('"internal_host" is required')        
+        if not config['internal_port']:
+            raise ProxyConfigError('"internal_port" is required')        
+
         self.set_remote('config',json.dumps(config))
         self.set_state('{relation_name}.configured')
