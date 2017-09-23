@@ -24,7 +24,7 @@ class ReverseProxyProvides(RelationBase):
         else:
             hookenv.log('No change, remote_unit: {}'.format(hookenv.remote_unit()), 'DEBUG')
             hookenv.log('No change, config: {}'.format(self.config), 'DEBUG')
-        
+
     @hook('{provides:reverseproxy}-relation-{departed}')
     def departed(self):
         hookenv.log('reverseproxy.departed', 'INFO')
@@ -50,15 +50,15 @@ class ReverseProxyProvides(RelationBase):
     def set_cfg_status(self, cfg_good, msg=None):
         ''' After receiving a reverse proxy request, the provider should provide a status update
         cfg_good: Boolean value to represnt if the config was valid
-        msg: Optional msg to to explain the status 
+        msg: Optional msg to to explain the status
         '''
         msg = msg or ''
         if cfg_good:
             status = 'passed: ' + msg
-            hookenv.log(status, 'INFO') 
+            hookenv.log(status, 'INFO')
         else:
             status = 'failed: ' + msg
-            hookenv.log(status, 'WARNING') 
+            hookenv.log(status, 'WARNING')
         self.set_remote(hookenv.remote_unit() + '.cfg_status', status)
 
     @property

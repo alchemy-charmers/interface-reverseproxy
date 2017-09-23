@@ -33,7 +33,7 @@ class ReverseProxyRequires(RelationBase):
         elif self.cfg_status.startswith('failed'):
             hookenv.log(self.cfg_status, 'ERROR')
             raise ProxyConfigError(self.cfg_status)
-                 
+
     @hook('{requires:reverseproxy}-relation-{departed}')
     def departed(self):
         self.set_state('{relation_name}.triggered')
@@ -54,16 +54,16 @@ class ReverseProxyRequires(RelationBase):
         # Create key if optional config isn't provided
         for oconfig in optional_configs:
             if not config[oconfig]:
-                pass 
+                pass
         # Check that mode is valid, set default if not provided
         if config['mode'] not in ('http', 'tcp'):
             if not config['mode']:
                 config['mode'] = 'http'
             else:
-                raise ProxyConfigError('"mode" setting must be http or tcp if provided')        
+                raise ProxyConfigError('"mode" setting must be http or tcp if provided')
         # Check for http required options
         if config['urlbase'] == config['subdomain'] is None and config['mode'] == 'http':
-            raise ProxyConfigError('"urlbase" or "subdomain" must be set in http mode')        
+            raise ProxyConfigError('"urlbase" or "subdomain" must be set in http mode')
 
         self.set_remote('config', json.dumps(config))
         self.set_state('{relation_name}.configured')
