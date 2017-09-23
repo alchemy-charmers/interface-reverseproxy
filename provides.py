@@ -66,4 +66,3 @@ class ReverseProxyProvides(RelationBase):
         if self.get_remote('config') is None:
             return None
         return json.loads(self.get_remote('config'))
-
