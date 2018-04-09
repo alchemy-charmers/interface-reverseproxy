@@ -46,7 +46,8 @@ class ReverseProxyRequires(RelationBase):
         # Basic config validation
         config = defaultdict(lambda: None, config)
         required_configs = ('external_port', 'internal_host', 'internal_port')
-        optional_configs = ('mode', 'urlbase', 'subdomain', 'group_id')
+        optional_configs = ('mode', 'urlbase', 'subdomain', 'group_id',
+                            'rewrite-urlbase')
         # Error if missing required configs
         for rconfig in required_configs:
             if not config[rconfig]:
