@@ -4,6 +4,8 @@ from charmhelpers.core import hookenv
 import socket
 import json
 
+from collections import defaultdict
+
 
 class ReverseProxyProvides(RelationBase):
     scope = scopes.UNIT
@@ -65,4 +67,6 @@ class ReverseProxyProvides(RelationBase):
     def config(self):
         if self.get_remote('config') is None:
             return None
-        return json.loads(self.get_remote('config'))
+        config = defaultdict(lambda: None, json.loads(self.get_remote('config')))
+        return config
+        # return json.loads(self.get_remote('config'))
