@@ -19,6 +19,8 @@ Departed:
 Proxy Configuration Keys:
  - mode: (Optional) set 'tcp' or 'http' routing, defaults to 'http'
  - urlbase: (Optional if subdomain is provided) the base url to redirect to his charm, including leading /
+ - acl-local: (Optional) restrict access to local ip address ranges for this backend
+ - rewrite-path: (Optional) remove the urlbase from the path 
  - subdomain: (Optional if urlbase is provided) a subdomain to redirect to this charm
  - external_port: the external port to listen on
  - internal_host: the internal host to redirect to
