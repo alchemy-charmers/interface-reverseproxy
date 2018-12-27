@@ -26,3 +26,6 @@ Proxy Configuration Keys:
  - internal_host: the internal host to redirect to
  - internal_port: the internal port to redirect to
  - group_id: (Optional) all relations with a matching group id will share the same server pool. urlbase, subdomain, and external_port should match on all members of the group
+ - proxypass: (Optional) set Forward-For and Forward-Proto headers
+ - ssl: (Optional) Connect to the backend via ssl regardless of the port
+ - ssl-verify: (Optional) Boolean, set to True to check SSL certs. False will not check
