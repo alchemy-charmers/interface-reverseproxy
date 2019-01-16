@@ -67,6 +67,13 @@ class ReverseProxyProvides(RelationBase):
     def config(self):
         if self.get_remote('config') is None:
             return None
-        config = defaultdict(lambda: None, json.loads(self.get_remote('config')))
-        return config
-        # return json.loads(self.get_remote('config'))
+        remote_config = json.loads(self.get_remote('config'))
+        # Previous relations would send a single dict, convert that to a list
+        # for backwards compatibility
+        configs = []
+        if isinstance(remote_config, dict):
+            configs.append(defaultdict(lambda: None, remote_config))
+        else:
+            configs = [defaultdict(lambda: None, d) for d in remote_config]
+
+        return configs
