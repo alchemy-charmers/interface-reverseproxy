@@ -43,24 +43,32 @@ class ReverseProxyRequires(RelationBase):
         hookenv.log('reverseproxy.departed', 'INFO')
 
     def configure(self, config):
-        # Basic config validation
-        config = defaultdict(lambda: None, config)
+        # If a single config is provided make it a list of one
+        configs = []
+        if isinstance(config, dict):
+            configs.append(config)
+        else:
+            configs = config
+        # Make all configs a defaultdict
+        configs = [defaultdict(lambda: None, d) for d in configs]
+        # Valid all configs
         required_configs = ('external_port', 'internal_host', 'internal_port')
-        # Error if missing required configs
-        for rconfig in required_configs:
-            if not config[rconfig]:
-                raise ProxyConfigError('"{}" is required'.format(rconfig))
-        # Check that mode is valid, set default if not provided
-        if config['mode'] not in ('http', 'tcp'):
-            if not config['mode']:
-                config['mode'] = 'http'
-            else:
-                raise ProxyConfigError('"mode" setting must be http or tcp if provided')
-        # Check for http required options
-        if config['urlbase'] == config['subdomain'] is None and config['mode'] == 'http':
-            raise ProxyConfigError('"urlbase" or "subdomain" must be set in http mode')
+        for entry in configs:
+            # Error if missing required configs
+            for rconfig in required_configs:
+                if not entry[rconfig]:
+                    raise ProxyConfigError('"{}" is required'.format(rconfig))
+            # Check that mode is valid, set default if not provided
+            if entry['mode'] not in ('http', 'tcp'):
+                if not entry['mode']:
+                    entry['mode'] = 'http'
+                else:
+                    raise ProxyConfigError('"mode" setting must be http or tcp if provided')
+            # Check for http required options
+            if entry['urlbase'] == entry['subdomain'] is None and entry['mode'] == 'http':
+                raise ProxyConfigError('"urlbase" or "subdomain" must be set in http mode')
 
-        self.set_remote('config', json.dumps(config))
+        self.set_remote('config', json.dumps(configs))
         self.set_state('{relation_name}.configured')
 
     @property

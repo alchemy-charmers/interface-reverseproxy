@@ -1,4 +1,4 @@
-This interface is intended to allow abstraction between a charm offering a service and one offering a reverse proxy. It is a work in progress.
+This interface is intended to allow abstraction between a charm offering a service and one offering a reverse proxy.
 
 All relation states should check for 'triggered' state to be sure it is a realation based event.
 
@@ -6,7 +6,8 @@ Expected flow:
  - Requires:
    - when 'ready' and when_not 'configured' call the configure fucntion to provide reverse proxy request information
  - Provides:
-   - when 'changed' apply self.config to the configuration.
+   - when 'changed' apply self.config to the configuration. *This is a list
+     of configurations to apply*
    - return a feedback about the config via the set_cfg_status function
  - Requires:
    - if cfg_status is a failure interface will log any provided status and fail
