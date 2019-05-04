@@ -31,3 +31,4 @@ Proxy Configuration Keys:
  - ssl: (Optional) Connect to the backend via ssl regardless of the port
  - ssl-verify: (Optional) Boolean, set to True to check SSL certs. False will not check
  - check: (Optional) perform port availability check, defaults to True set False to not check
+ - httpchk: (Optional) if the mode is HTTP, and checks are enabled, this will be appended to the httpchk option for the backend

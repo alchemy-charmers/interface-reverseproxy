@@ -67,6 +67,9 @@ class ReverseProxyRequires(RelationBase):
             # Set default value for 'check' if not set
             if entry['check'] is None:
                 entry['check'] = True
+            # Set http check params if appropriate
+            if (entry['mode'] != 'http' or entry['check'] is False) and entry['httpchk']:
+                entry['httpchk'] = None
             # Check for http required options
             if entry['urlbase'] == entry['subdomain'] is None and entry['mode'] == 'http':
                 raise ProxyConfigError('"urlbase" or "subdomain" must be set in http mode')
