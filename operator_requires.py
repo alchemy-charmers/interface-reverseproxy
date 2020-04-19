@@ -23,9 +23,16 @@ class ProxyConnected(EventBase):
     pass
 
 
+class ProxyStatusAvailable(EventBase):
+    """Emitted when a status is available from the proxy."""
+
+    pass
+
+
 class InterfaceRequiresEvents(EventSetBase):
     proxy_ready = EventSource(ProxyReady)
     proxy_connected = EventSource(ProxyConnected)
+    proxy_status_available = EventSource(ProxyStatusAvailable)
 
 
 class ProxyConfig:
@@ -101,6 +108,7 @@ class ReverseProxyRequires(Object):
         # TODO: Observer and handle departed
         self.state.set_default(hostname=False)
         self.state.set_default(ports=False)
+        self.state.set_default(config_status=False)
 
     def on_relation_joined(self, event):
         """React to relation joined."""
@@ -117,6 +125,17 @@ class ReverseProxyRequires(Object):
             self.state.ports = ports
             self.on.proxy_ready.emit()
             logging.debug("Proyx {} is ready".format(hostname))
+
+        status_key = "{}.config_status".format(self.model.unit)
+        config_status = event.relation.data[event.unit].get(status_key)
+
+        if config_status:
+            self.state.config_status = config_status
+            if config_status.startswith('passed'):
+                logging.info(config_status)
+            elif config_status.startswith('failed'):
+                logging.error(config_status)
+            self.on.proxy_status_available.emit()
 
     def set_proxy_config(self, config):
         """Configure the proxy relation."""
@@ -138,7 +157,9 @@ class ReverseProxyRequires(Object):
                 )
 
         logging.debug("Setting proxy configs on relation")
-        self._relation.data[self.model.unit]["config"] = json.dumps(configs, cls=ProxyConfigEncoder)
+        self._relation.data[self.model.unit]["config"] = json.dumps(
+            configs, cls=ProxyConfigEncoder
+        )
 
     @property
     def proxy_hostname(self):
@@ -151,3 +172,9 @@ class ReverseProxyRequires(Object):
         """Ports for the remote host."""
 
         return self.state.ports
+
+    @property
+    def config_status(self):
+        """Status from the host for provided config."""
+
+        return self.state.config_status
