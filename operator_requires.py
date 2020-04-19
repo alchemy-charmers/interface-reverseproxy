@@ -1,7 +1,7 @@
 import json
 import logging
 
-from collcetions import defaultdict
+from collections import defaultdict
 from ops.framework import EventBase, EventSetBase, EventSource, Object, StoredState
 
 
