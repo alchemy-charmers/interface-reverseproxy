@@ -110,16 +110,21 @@ class ReverseProxyRequires(Object):
     def set_proxy_config(self, config):
         """Configure the proxy relation."""
         configs = []
-        configs.extend(config)
+        if isinstance(config, list):
+            configs = config
+        else:
+            configs.append(config)
 
+        logging.debug("Verifying type of proxy configs")
         for config in configs:
-            if type(config) is not ProxyConfig:
+            if not isinstance(config, ProxyConfig):
                 raise ProxyConfigError(
                     "Proxy config must be of type ProxyConfig not {}".format(
                         type(config)
                     )
                 )
 
+        logging.debug("Setting proxy configs on relation")
         self._relation.data[self.model.unit]["config"] = json.dumps(configs)
 
     @property
