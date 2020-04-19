@@ -70,7 +70,7 @@ class ReverseProxyRequires(Object):
     state = StoredState()
 
     def __init__(self, charm, relation_name):
-        super().__init(charm, relation_name)
+        super().__init__(charm, relation_name)
         self._relation_name = relation_name
         self._relation = self.model.get_relation(relation_name)
         self.framework.observe(
