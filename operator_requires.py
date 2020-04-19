@@ -65,7 +65,7 @@ class ProxyConfig:
 
 class ReverseProxyRequires(Object):
 
-    on = InterfaceRequiresEvents
+    on = InterfaceRequiresEvents()
 
     state = StoredState()
 
