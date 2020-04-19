@@ -1,7 +1,7 @@
 import json
 import logging
-
 from collections import defaultdict
+
 from ops.framework import EventBase, EventSetBase, EventSource, Object, StoredState
 
 
@@ -12,11 +12,20 @@ class ProxyConfigError(Exception):
 
 
 class ProxyReady(EventBase):
+    """Emitted if the proxy provides host and port configurations."""
+
+    pass
+
+
+class ProxyConnected(EventBase):
+    """Emitted when a relation is established."""
+
     pass
 
 
 class InterfaceRequiresEvents(EventSetBase):
     proxy_ready = EventSource(ProxyReady)
+    proxy_connected = EventSource(ProxyConnected)
 
 
 class ProxyConfig:
@@ -76,9 +85,17 @@ class ReverseProxyRequires(Object):
         self.framework.observe(
             charm.on[relation_name].relation_changed, self.on_relation_changed
         )
+        self.framework.observe(
+            charm.on[relation_name].relation_joined, self.on_relation_joined
+        )
         # TODO: Observer and handle departed
         self.state.set_default(hostname=False)
         self.state.set_default(ports=False)
+
+    def on_relation_joined(self, event):
+        """React to relation joined."""
+        logging.debug("Emitting proxy joined event")
+        self.on.proxy_connected.emit()
 
     def on_relation_changed(self, event):
         """React to relaction changed."""
