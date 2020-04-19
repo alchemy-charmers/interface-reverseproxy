@@ -40,25 +40,24 @@ class ProxyConfig:
 
         # Verify required settings are provided
 
-        for entry in self._config:
-            for required in required_configs:
-                if not entry[required]:
-                    raise ProxyConfigError('"{}" is required'.format(required))
+        for required in required_configs:
+            if not self._config[required]:
+                raise ProxyConfigError('"{}" is required'.format(required))
 
         # Validate mode setting
 
-        if entry["mode"] not in ("http", "tcp"):
-            if not entry["mode"]:
-                entry["mode"] = "http"
+        if self._config["mode"] not in ("http", "tcp"):
+            if not self._config["mode"]:
+                self._config["mode"] = "http"
             else:
                 raise ProxyConfigError('"mode" setting must be http or tcp if provided')
         # Set default value for 'check' if not set
 
-        if entry["check"] is None:
-            entry["check"] = True
+        if self._config["check"] is None:
+            self._config["check"] = True
         # Check for http required options
 
-        if entry["urlbase"] == entry["subdomain"] is None and entry["mode"] == "http":
+        if self._config["urlbase"] == self._config["subdomain"] is None and self._config["mode"] == "http":
             raise ProxyConfigError('"urlbase" or "subdomain" must be set in http mode')
 
     def __getitem__(self, key):
