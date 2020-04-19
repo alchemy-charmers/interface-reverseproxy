@@ -138,7 +138,7 @@ class ReverseProxyRequires(Object):
                 )
 
         logging.debug("Setting proxy configs on relation")
-        self._relation.data[self.model.unit]["config"] = json.dumps(configs)
+        self._relation.data[self.model.unit]["config"] = json.dumps(configs, cls=ProxyConfigEncoder)
 
     @property
     def proxy_hostname(self):
