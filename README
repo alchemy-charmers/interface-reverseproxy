@@ -18,7 +18,10 @@ Departed:
   - when 'departed' remove self.config from the configuration
 
 Proxy Configuration Keys:
- - mode: (Optional) set 'tcp' or 'http' routing, defaults to 'http'
+ - mode: (Optional) set 'tcp', 'tcp+tls' or 'http' routing, defaults to 'http'
+         NOTE: tcp+tls is the same as tcp, however load balancers should ensure that if TLS is enabled,
+	       tcp+tls frontends will treat the frontend TCP connection as being TLS-encrypted from the client
+	       this is to allow things like TLS offload and inspection on TCP sockets
  - urlbase: (Optional if subdomain is provided) the base url to redirect to his charm, including leading /
  - acl-local: (Optional) restrict access to local ip address ranges for this backend
  - rewrite-path: (Optional) remove the urlbase from the path 

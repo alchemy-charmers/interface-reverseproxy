@@ -59,11 +59,11 @@ class ReverseProxyRequires(RelationBase):
                 if not entry[rconfig]:
                     raise ProxyConfigError('"{}" is required'.format(rconfig))
             # Check that mode is valid, set default if not provided
-            if entry['mode'] not in ('http', 'tcp'):
+            if entry['mode'] not in ('http', 'tcp', 'tcp+tls'):
                 if not entry['mode']:
                     entry['mode'] = 'http'
                 else:
-                    raise ProxyConfigError('"mode" setting must be http or tcp if provided')
+                    raise ProxyConfigError('"mode" setting must be http, tcp or tcp+tls if provided')
             # Set default value for 'check' if not set
             if entry['check'] is None:
                 entry['check'] = True

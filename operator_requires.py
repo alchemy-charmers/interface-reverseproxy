@@ -53,11 +53,11 @@ class ProxyConfig:
 
         # Validate mode setting
 
-        if self._config["mode"] not in ("http", "tcp"):
+        if self._config["mode"] not in ("http", "tcp", "tcp+tls"):
             if not self._config["mode"]:
                 self._config["mode"] = "http"
             else:
-                raise ProxyConfigError('"mode" setting must be http or tcp if provided')
+                raise ProxyConfigError('"mode" setting must be http, tcp or tcp+tls if provided')
         # Set default value for 'check' if not set
 
         if self._config["check"] is None:
